@@ -21,7 +21,7 @@ recordRoutes.get('/',(req,res) =>{
     res.send("Hello");
 })
 recordRoutes.get('/records', (req, res) =>{
-    dbo.connection.db.collection("Personas").find({})
+    dbo.connection.useDb('MoticaDB').collection("Personas").find({})
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
