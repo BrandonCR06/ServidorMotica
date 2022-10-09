@@ -29,6 +29,19 @@ recordRoutes.get('/records', (req, res) =>{
     
 });
 
+
+
+// This section will help you get a list of all the products.
+recordRoutes.get('/products', (req, res) =>{
+  dbo.connection.useDb('MoticaDB').collection("Products").find({})
+  .toArray(function (err, result) {
+    if (err) throw err;
+    res.json(result);
+  });
+  
+});
+
+
 recordRoutes.post('/add/user', (req, res) =>{
     let myobj = {
         PersonId: req.body.PersonId,        
