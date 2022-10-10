@@ -20,6 +20,15 @@ const ObjectId = require("mongodb").ObjectId;
 recordRoutes.get('/',(req,res) =>{
     res.send("Hello");
 })
+recordRoutes.get('/get/users', (req, res) =>{
+  dbo.connection.useDb('MoticaDB').collection("Users").find({})
+  .toArray(function (err, result) {
+    if (err) throw err;
+    res.json(result);
+  });
+  
+});
+
 recordRoutes.get('/records', (req, res) =>{
     dbo.connection.useDb('MoticaDB').collection("Personas").find({})
     .toArray(function (err, result) {
@@ -44,13 +53,18 @@ recordRoutes.get('/products', (req, res) =>{
 
 recordRoutes.post('/add/user', (req, res) =>{
     let myobj = {
-        PersonId: req.body.PersonId,        
-        image: req.body.image,
-        username: req.body.username
+        nombre: req.body.nombre,        
+        apellido: req.body.apellido,
+        fecha_nacimiento: req.body.fecha_nacimiento,
+        correo: req.body.correo,
+        contrasenha : req.body.contrasenha,
+        cedula : req.body.cedula,
+        sexo : req.body.sexo,
+        rol : req.body.rol
       };
       console.log(req.body);
-    dbo.connection.db.collection("Personas").insertOne(myobj, function (err, result) {
-        if (err) throw err;
+    dbo.connection.useDb('MoticaDB').collection("Users").insertOne(myobj, function (err, result) {
+        if (err) console.log (err);
         res.json(result);
       });
 });
