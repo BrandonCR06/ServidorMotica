@@ -53,7 +53,7 @@ var id = req.params.gonderi_id;
 var o_id = new ObjectId(id);
 db.test.find({_id:o_id})
 */ 
-recordRoutes.get('/get/preguntas', (req, res) =>{
+recordRoutes.get('/preguntas', (req, res) =>{
   dbo.connection.useDb('MoticaDB').collection("Preguntas").aggregate(
     [{$lookup:{from :"Users",localField:"usuario",foreignField:"_id", as: "usuario"}}])
     .toArray(function (err, result) {
