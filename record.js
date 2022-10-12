@@ -28,14 +28,6 @@ recordRoutes.get('/get/users', (req, res) =>{
   
 });
 
-recordRoutes.get('/records', (req, res) =>{
-    dbo.connection.useDb('MoticaDB').collection("Personas").find({})
-    .toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-    
-});
 
 
 
@@ -71,12 +63,22 @@ recordRoutes.post('/register/question', (req, res) =>{
       usuario: o_id,
       respuesta:  req.body.respuesta
     };
-    console.log(req.body);
+    
   dbo.connection.useDb('MoticaDB').collection("Preguntas").insertOne(myobj, function (err, result) {
       if (err) console.log (err);
       res.json(result);
     });
 });
+recordRoutes.post('/question', (req, res) =>{  
+    
+  dbo.connection.useDb('MoticaDB').collection("Preguntas")
+  .updateOne({_id: ObjectId(req.body.preguntaId)},{$set:{respuesta:req.body.respuesta}}, function(err,result){
+    if (err) console.log (err);
+    res.json(result);
+  })
+
+});
+
 
 recordRoutes.post('/add/user', (req, res) =>{
     let myobj = {
@@ -89,7 +91,7 @@ recordRoutes.post('/add/user', (req, res) =>{
         sexo : req.body.sexo,
         rol : req.body.rol
       };
-      console.log(req.body);
+      
     dbo.connection.useDb('MoticaDB').collection("Users").insertOne(myobj, function (err, result) {
         if (err) console.log (err);
         res.json(result);
