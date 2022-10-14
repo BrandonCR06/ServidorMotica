@@ -96,7 +96,7 @@ recordRoutes.post('/add/user', (req, res) =>{
 
 recordRoutes.get('/promociones', (req, res) =>{
   dbo.connection.useDb('MoticaDB').collection("Promocion").aggregate(
-    [{$lookup:{from :"Producto",localField:"Producto.id",foreignField:"id", as: "producto"}}])
+    [{$lookup:{from :"Products",localField:"producto",foreignField:"_id", as: "producto"}}])
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
