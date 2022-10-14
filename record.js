@@ -11,10 +11,6 @@ const dbo = require("./database");
 const ObjectId = require("mongodb").ObjectId;
  
 
-
- 
-
-
 // This section will help you get a list of all the records.
 recordRoutes.get('/',(req,res) =>{
     res.send("Hello");
@@ -97,6 +93,17 @@ recordRoutes.post('/add/user', (req, res) =>{
         res.json(result);
       });
 });
+
+recordRoutes.get('/promociones', (req, res) =>{
+  dbo.connection.useDb('MoticaDB').collection("Promocion").aggregate(
+    [{$lookup:{from :"Producto",localField:"Producto.id",foreignField:"id", as: "producto"}}])
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+
+}
+);
  
 
 
