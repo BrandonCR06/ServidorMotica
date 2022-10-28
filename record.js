@@ -65,6 +65,37 @@ recordRoutes.post('/register/question', (req, res) =>{
       res.json(result);
     });
 });
+
+recordRoutes.post('/register/product', (req, res) =>{
+
+  
+  let myobj = {
+
+    
+      imgSrc: req.body.imgSrc,
+      cantidad: req.body.cantidad,
+      description: req.body.descripcion,
+      estado: req.body.estado,
+      nombre: req.body.nombre,
+      precio: req.body.precio,
+      categoria: req.body.categoria
+    };
+    
+  dbo.connection.useDb('MoticaDB').collection("Products").insertOne(myobj, function (err, result) {
+      if (err) console.log (err);
+      res.json(result);
+    });
+});
+
+
+
+
+
+
+
+
+
+
 recordRoutes.post('/question', (req, res) =>{  
     
   dbo.connection.useDb('MoticaDB').collection("Preguntas")
