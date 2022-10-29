@@ -88,7 +88,17 @@ recordRoutes.post('/register/product', (req, res) =>{
 });
 
 
+recordRoutes.get('/promociones', (req, res) =>{
+  dbo.connection.useDb('MoticaDB').collection("Promocion").aggregate(
+    [{$lookup:{from :"Products",localField:"producto",foreignField:"_id", as: "producto"}}])
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
 
+}
+);
+ 
 
 
 
