@@ -66,6 +66,52 @@ recordRoutes.post('/register/question', (req, res) =>{
     });
 });
 
+
+recordRoutes.post('/register/order', (req, res) =>{
+let prods = []
+
+  for(let i = 0 ; i < req.body.products.length; i ++){
+    prods.push([ObjectId(req.body.products[i][0]),req.body.products[i][1]])
+  }
+  
+  
+  let myobj = {
+
+    
+      user: ObjectId(req.body.user),
+      //Esto aqui tiene que enviarse como lista    
+      products: prods,
+      total: req.body.total,
+      timestamp: new Date()
+    };
+    
+   
+  dbo.connection.useDb('MoticaDB').collection("Orders").insertOne(myobj, function (err, result) {
+      if (err) console.log (err);
+      res.json(result);
+    });
+});
+
+
+recordRoutes.get('/orders', (req, res) =>{
+  
+  
+  
+  
+  dbo.connection.useDb('MoticaDB').collection("Orders").aggregate([    
+    {$addFields:{adjustedProds:    
+    {$map:{input:"$products",as:"prods",in:{$first: "$$prods"}}}}},
+  {$lookup:{from:"Products",localField:"adjustedProds",foreignField:"_id",as :"ObjectProds"}},
+  {$addFields:{cant:{$map:{input:"$products",as:"prods",in:{$last: "$$prods"}}}}},{
+    $lookup:{from:"Users",localField:"user",foreignField:"_id",as:"objUser"}}])
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+
+}
+);
+
 recordRoutes.post('/register/product', (req, res) =>{
 
   
