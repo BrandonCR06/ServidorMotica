@@ -163,6 +163,47 @@ recordRoutes.post('/question', (req, res) =>{
 });
 
 
+
+
+recordRoutes.post('/updateProduct', (req, res) =>{  
+  
+  console.log(req.body.id)
+  
+  dbo.connection.useDb('MoticaDB').collection("Products")
+  .updateOne({_id: ObjectId(req.body.id)},{$set:
+    {
+      imgSrc:req.body.imgSrc,
+      nombre: req.body.name,
+      description: req.body.description,
+      estado: req.body.activo,
+      nombre: req.body.name,
+      price: req.body.price,
+      categoria: req.body.category,
+      cantidad: req.body.cantidad
+    }}, function(err,result){
+    if (err) console.log (err);
+    res.json(result);
+  })
+
+});
+
+
+recordRoutes.delete('/remove/product', (req, res) => {
+
+  console.log(req.body._id)
+  dbo.connection.useDb('MoticaDB').collection("Products").deleteOne({_id: ObjectId(req.body._id)}, function (err, result) {
+    
+      if (err) console.log (err);
+      res.json(result);
+    });
+  });
+
+
+
+
+
+
+
 recordRoutes.post('/add/user', (req, res) =>{
     let myobj = {
         nombre: req.body.nombre,        
