@@ -51,6 +51,34 @@ recordRoutes.get('/preguntas', (req, res) =>{
 
 }
 );
+
+
+recordRoutes.post('/update/user', (req, res) =>{
+  var userid = req.body._id;
+  var o_id = new ObjectId(userid);  
+  let myobj = {
+    nombre: req.body.name,        
+    apellido: req.body.apellido,
+    fecha_nacimiento: req.body.fechaNacimiento,
+    correo: req.body.email,
+    cedula : req.body.cedula,
+    sexo : req.body.sexo,
+    
+    };
+    console.log(o_id, myobj)
+    
+    
+  dbo.connection.useDb('MoticaDB').collection("Users").updateOne({_id:o_id},{$set:{nombre: req.body.name,apellido : req.body.apellido,  fecha_nacimiento: req.body.fechaNacimiento,
+    correo: req.body.email,
+    cedula : req.body.cedula,
+    sexo : req.body.sexo,
+      }}, function (err, result) {
+        if (err) console.log (err);
+        res.json(result);
+      });
+  });
+
+
 recordRoutes.post('/register/question', (req, res) =>{
   var userid = req.body.usuario;
   var o_id = new ObjectId(userid);  
