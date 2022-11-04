@@ -264,4 +264,62 @@ recordRoutes.get('/promociones', (req, res) =>{
 
 
 
+recordRoutes.post('/register/promotion', (req, res) =>{
+
+  
+  let myobj = {
+      descripcion: req.body.descripcion,
+      fechaInicio: req.body.fechaInicio,
+      fechaFinal: req.body.fechaFinal,
+      producto: ObjectId(req.body.producto),
+      porcentaje: req.body.porcentaje
+    };
+    
+  dbo.connection.useDb('MoticaDB').collection("Promocion").insertOne(myobj, function (err, result) {
+      if (err) console.log (err);
+      res.json(result);
+    });
+});
+
+
+
+recordRoutes.delete('/remove/promotion', (req, res) => {
+
+  console.log(req.body._id)
+  dbo.connection.useDb('MoticaDB').collection("Promocion").deleteOne({_id: ObjectId(req.body._id)}, function (err, result) {
+    
+      if (err) console.log (err);
+      res.json(result);
+    });
+  });
+
+
+ 
+recordRoutes.post('/updatePromo', (req, res) =>{  
+
+  console.log(req.body.id)
+  
+  dbo.connection.useDb('MoticaDB').collection("Promocion")
+  .updateOne({_id: ObjectId(req.body.id)},{$set:
+    {
+      fechaInicio:req.body.fechaInicio,
+      fechaFinal: req.body.fechaFinal,
+      porcentaje: req.body.porcentaje,
+      descripcion: req.body.descripcion
+
+    }}, function(err,result){
+    if (err) console.log (err);
+    res.json(result);
+  })
+
+});
+
+
+
+
+
+
+
+
+
 module.exports = recordRoutes;
