@@ -151,8 +151,9 @@ recordRoutes.post('/register/product', (req, res) =>{
       description: req.body.descripcion,
       estado: req.body.estado,
       nombre: req.body.nombre,
-      precio: req.body.precio,
-      categoria: req.body.categoria
+      price: req.body.precio,
+      categoria: req.body.categoria,
+      descuento: 0
     };
     
   dbo.connection.useDb('MoticaDB').collection("Products").insertOne(myobj, function (err, result) {
