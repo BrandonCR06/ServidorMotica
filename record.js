@@ -102,9 +102,9 @@ let prods = []
     prods.push([
       ObjectId(req.body.listaItems[i][0]),     // CODIGO INT
       req.body.listaItems[i][1],               // DESCRIPCION STRING NOMBRE
-      req.body.listaItems[i][2],               // CANTIDAD INT
       parseFloat(req.body.listaItems[i][3]),   // UNITARIO FLOAT
-      req.body.listaItems[i][4]])              // CATEGORIA INT
+      req.body.listaItems[i][4],              // CATEGORIA INT
+      req.body.listaItems[i][2]])               // CANTIDAD INT
   }
 
   let myobj = {
@@ -114,7 +114,8 @@ let prods = []
       hora: new Date().getTime(),
       subtotal: parseFloat(req.body.subtotal),
       total: parseFloat(req.body.total), 
-      listaItems: req.body.listaItems
+      products: prods,
+      estado: "Facturado"
     };
     
    
@@ -156,6 +157,25 @@ recordRoutes.get('/orders', (req, res) =>{
     {$map:{input:"$products",as:"prods",in:{$first: "$$prods"}}}}},
   {$lookup:{from:"Products",localField:"adjustedProds",foreignField:"_id",as :"ObjectProds"}},
   {$addFields:{cant:{$map:{input:"$products",as:"prods",in:{$last: "$$prods"}}}}},{
+    $lookup:{from:"Users",localField:"user",foreignField:"_id",as:"objUser"}}])
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+
+}
+);
+
+recordRoutes.get('/orders2', (req, res) =>{
+  
+  
+  
+  
+  dbo.connection.useDb('MoticaDB').collection("Orders").aggregate([    
+    {$addFields:{adjustedProds:    
+    {$map:{input:"$listaItems",as:"prods",in:{$first: "$$prods"}}}}},
+  {$lookup:{from:"Products",localField:"adjustedProds",foreignField:"_id",as :"ObjectProds"}},
+  {$addFields:{cant:{$map:{input:"$listaItems",as:"prods",in:{$last: "$$prods"}}}}},{
     $lookup:{from:"Users",localField:"user",foreignField:"_id",as:"objUser"}}])
     .toArray(function (err, result) {
       if (err) throw err;
