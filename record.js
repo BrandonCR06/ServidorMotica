@@ -98,13 +98,13 @@ recordRoutes.post('/register/question', (req, res) =>{
 recordRoutes.post('/register/order2', (req, res) =>{
 let prods = []
 
-  for(let i = 0 ; i < req.body.products.length; i ++){
+  for(let i = 0 ; i < req.body.listaItems.length; i ++){
     prods.push([
-      ObjectId(req.body.products[i][0]),     // CODIGO INT
-      req.body.products[i][1],               // DESCRIPCION STRING NOMBRE
-      req.body.products[i][2],               // CANTIDAD INT
-      parseFloat(req.body.products[i][3]),   // UNITARIO FLOAT
-      req.body.products[i][4]])              // CATEGORIA INT
+      ObjectId(req.body.listaItems[i][0]),     // CODIGO INT
+      req.body.listaItems[i][1],               // DESCRIPCION STRING NOMBRE
+      req.body.listaItems[i][2],               // CANTIDAD INT
+      parseFloat(req.body.listaItems[i][3]),   // UNITARIO FLOAT
+      req.body.listaItems[i][4]])              // CATEGORIA INT
   }
 
   let myobj = {
@@ -113,7 +113,8 @@ let prods = []
       fecha: new Date(),
       hora: new Date().getTime(),
       subtotal: parseFloat(req.body.subtotal),
-      total: parseFloat(req.body.total)
+      total: parseFloat(req.body.total), 
+      listaItems: req.body.listaItems
     };
     
    
