@@ -95,22 +95,25 @@ recordRoutes.post('/register/question', (req, res) =>{
 });
 
 
-recordRoutes.post('/register/order', (req, res) =>{
+recordRoutes.post('/register/order2', (req, res) =>{
 let prods = []
 
   for(let i = 0 ; i < req.body.products.length; i ++){
-    prods.push([ObjectId(req.body.products[i][0]),req.body.products[i][1]])
+    prods.push([
+      ObjectId(req.body.products[i][0]),     // CODIGO INT
+      req.body.products[i][1],               // DESCRIPCION STRING NOMBRE
+      req.body.products[i][2],               // CANTIDAD INT
+      parseFloat(req.body.products[i][3]),   // UNITARIO FLOAT
+      req.body.products[i][4]])              // CATEGORIA INT
   }
-  
-  
-  let myobj = {
 
-    
+  let myobj = {
       user: ObjectId(req.body.user),
-      //Esto aqui tiene que enviarse como lista    
-      products: prods,
-      total: req.body.total,
-      timestamp: new Date()
+      numFactura: req.body.numFactura,
+      fecha: new Date(),
+      hora: new Date().getTime(),
+      subtotal: parseFloat(req.body.subtotal),
+      total: parseFloat(req.body.total)
     };
     
    
@@ -119,6 +122,27 @@ let prods = []
       res.json(result);
     });
 });
+
+
+recordRoutes.post('/register/order', (req, res) =>{
+  let prods = []
+  for(let i = 0 ; i < req.body.products.length; i ++){
+    prods.push([ObjectId(req.body.products[i][0]),req.body.products[i][1]])
+  }
+  let myobj = { 
+        user: ObjectId(req.body.user),
+        //Esto aqui tiene que enviarse como lista    
+        products: prods,
+        total: req.body.total,
+        timestamp: new Date()
+      };
+    dbo.connection.useDb('MoticaDB').collection("Orders").insertOne(myobj, function (err, result) {
+        if (err) console.log (err);
+        res.json(result);
+      });
+  });
+
+
 
 
 recordRoutes.get('/orders', (req, res) =>{
@@ -177,8 +201,16 @@ recordRoutes.get('/promociones', (req, res) =>{
 
 
 
+recordRoutes.get('/numFactura', (req, res) =>{
 
-
+  dbo.connection.useDb('MoticaDB').collection("Orders").find().sort({"numFactura":-1}).limit(1)
+  .toArray(function (err, result) {
+    if (err) throw err;
+    res.json(result)
+  });
+  //db.teams.find().sort({"field":-1}).limit(1).toArray().map(function(u){return u.field})
+}
+);
 
 
 recordRoutes.post('/question', (req, res) =>{  
