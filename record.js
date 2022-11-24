@@ -281,7 +281,19 @@ recordRoutes.delete('/remove/product', (req, res) => {
   });
 
 
+  recordRoutes.post('/update/order', (req, res) => {
 
+    console.log(req.body.numFactura, req.body.estado)
+    dbo.connection.useDb('MoticaDB').collection("Orders").updateOne({numFactura: req.body.numFactura},{$set:
+      {
+        estado:req.body.estado,
+       
+      }}, function(err,result){
+      if (err) console.log (err);
+      res.json(result);
+    })
+  
+  });
 
 
 
